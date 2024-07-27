@@ -12,6 +12,19 @@ class AuthorType(DjangoObjectType):
         model = Author
         fields = "__all__"
 
+class CreateAuthor(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        email = graphene.String(required=True)
+
+    author = graphene.Field(AuthorType)
+
+    def mutate(self, info, name, email):
+        author = Author(name=name, email=email)
+        author.save()
+
+        return CreateAuthor(author=author)
+
 class CreatePost(graphene.Mutation):
     class Arguments:
         title = graphene.String(required=True)
